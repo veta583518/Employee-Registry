@@ -1,6 +1,8 @@
 const fs = require("fs");
 
-//
+// create card for each employee
+const createCards = (data) => {};
+
 const generateWebpage = (data) => {
   return `
       <!DOCTYPE html> 
@@ -29,10 +31,4 @@ const generateWebpage = (data) => {
     `;
 };
 
-fs.writeFile("index.html", generateWebpage(), (err) => {
-  if (err) throw new Error();
-
-  console.log("Webpage complete! Checkout index.html to see the output!");
-});
-
-module.exports = generateWebpage;
+module.exports = pageTemplate;

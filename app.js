@@ -180,12 +180,12 @@ const addEngineer = () => {
         },
       ])
       // creates a engineer from user input, add engineer to teamData array, and returns to add prompt
-      .then((input) => {
+      .then((data) => {
         const engineer = new Engineer(
-          input.engName,
-          input.engId,
-          engineerEmail,
-          engineerGithub
+          data.name,
+          data.id,
+          data.email,
+          data.github
         );
         teamData.push(engineer);
         promptAdd();
@@ -200,7 +200,7 @@ const addIntern = () => {
       .prompt([
         {
           type: "input",
-          name: "intName",
+          name: "name",
           message: "Enter the intern's name.",
           validate: (nameInput) => {
             if (nameInput) {
@@ -213,8 +213,8 @@ const addIntern = () => {
         },
         {
           type: "input",
-          name: "intId",
-          message: "Enter the intern's id.",
+          name: "id",
+          message: "Enter the intern's id. (Must be a number)",
           validate: (idInput) => {
             if (idInput) {
               return true;
@@ -225,8 +225,8 @@ const addIntern = () => {
           },
         },
         {
-          type: "email",
-          name: "intEmail",
+          type: "input",
+          name: "email",
           message: "Enter the intern's email address.",
           validate: (email) => {
             if (email) {
@@ -252,13 +252,8 @@ const addIntern = () => {
         },
       ])
       // creates a intern from user input, add intern to teamData array, and returns to add prompt
-      .then((input) => {
-        const intern = new Intern(
-          input.intName,
-          input.intId,
-          input.intEmail,
-          input.school
-        );
+      .then((data) => {
+        const intern = new Intern(data.name, data.id, data.email, data.school);
         teamData.push(intern);
         promptAdd();
       })
