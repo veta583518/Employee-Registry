@@ -8,9 +8,9 @@ const generateWebpage = require("./src/pageTemplate.js");
 const { writeToFile } = require("./utils/generateWebpage");
 const validator = require("email-validator");
 
-// array to store team data
-
+// array to store team data and ids
 let teamData = [];
+let idArray = [];
 
 // prompts user to answer questions about manager
 const promptManager = () => {
@@ -75,7 +75,7 @@ const promptManager = () => {
         },
       ])
 
-      // creates a manager from user input, add manager to teamData array, and returns to add prompt
+      // creates a manager from user input, add manager to teamData array, and returns to menu prompt
       .then((data) => {
         const manager = new Manager(
           data.name,
@@ -83,7 +83,8 @@ const promptManager = () => {
           data.email,
           data.office
         );
-        teamData.push(manager);
+        teamData.push(manager)
+        idArray.push(data.id);
         menu();
       })
   );
@@ -107,38 +108,12 @@ const menu = () => {
       ])
       // use switch statement to call correct role's questions based on user selection from menu
       .then((response) => {
-        switch (response.menuChoice) {
+        switch (response.menuSelect) {
           case "Add an Engineer to the team":
             addEngineer()
-              // creates engineer object based on user input
-              .then((engineerData) => {
-                return new Engineer(
-                  engineerData.name,
-                  engineerData.id,
-                  engineerData.email,
-                  engineerData.github
-                );
-              })
-              .then((engineer) => {
-                teamData.push(engineer);
-                menu();
-              });
             break;
           case "Add an Intern to the team":
             addIntern()
-              // creates intern object based on user input
-              .then((internData) => {
-                return new Intern(
-                  internData.name,
-                  internData.id,
-                  internData.email,
-                  internData.school
-                );
-              })
-              .then((intern) => {
-                teamData.push(intern);
-                menu();
-              });
             break;
           case "My team is complete":
             buildTeam();
@@ -150,100 +125,125 @@ const menu = () => {
   );
 };
 
+const addEngineer = (engineerData) => {
+  // creates engineer object based on user input
+  const engineer = new Engineer(engineerData.name, engineerData.id, engineerData.email, engineerData.github)
+  addTeam()
+  .then((engineer) => {
+    teamData.push(engineer);
+    idArray.push(data.id);
+    menu();
+  })
+};
+
+const addIntern = (internData) => {
+  // creates intern object based on user input
+  const intern = new Intern(internData.name, internData.id, internData.email, internData.school)
+  addTeam()
+  .then((intern) => {
+    teamData.push(intern);
+    idArray.push(data.id);
+    menu();
+  })
+};
+
+const buildTeam = () => {
+  fs.writeFileSync(outputPath, render(teamData), 'utf-8')
+}
 // prompts user with questions about team members
 const addTeam = () => {
-  return (
-    inquirer
-      .prompt([
-        {
-          type: "input",
-          name: "name",
-          message: "Enter the ${role}'s name.",
-          validate: (nameInput) => {
-            if (nameInput) {
-              return true;
-            } else {
-              console.log("Please enter the ${role}'s name!");
-              return false;
-            }
-          },
+  return inquirer
+    .prompt([
+      {
+        type: "input",
+        name: "name",
+        message: "Enter the ${role}'s name.",
+        validate: (nameInput) => {
+          if (nameInput) {
+            return true;
+          } else {
+            console.log("Please enter the ${role}'s name!");
+            return false;
+          }
         },
-        {
-          type: "input",
-          name: "id",
-          message: "Enter the ${role}'s id.",
-          validate: (idInput) => {
-            if (idInput) {
-              return true;
-            } else {
-              console.log("Please enter the ${role}'s id!");
-              return false;
-            }
-          },
+      },
+      {
+        type: "input",
+        name: "id",
+        message: "Enter the ${role}'s id.",
+        validate: (idInput) => {
+          if (idInput) {
+            return true;
+          } else {
+            console.log("Please enter the ${role}'s id!");
+            return false;
+          }
         },
-        {
-          type: "input",
-          name: "email",
-          message: "Enter the ${role}'s email address.",
-          validate: (email) => {
-            if (email) {
-              return true;
-            } else {
-              console.log("Please enter the {${role}'s email address!");
-              return false;
-            }
-          },
+      },
+      {
+        type: "input",
+        name: "email",
+        message: "Enter the ${role}'s email address.",
+        validate: (email) => {
+          if (email) {
+            return true;
+          } else {
+            console.log("Please enter the {${role}'s email address!");
+            return false;
+          }
         },
-      ])
-      .then((conditionalQuestions) => {
-        switch (role) {
-          // prompts for github for only engineer role
-          case "engineer":
-            return {
-              type: "input",
-              name: "github",
-              message: "Enter the ${role}'s GitHub username.(Required)",
-              validate: (githubInput) => {
-                if (githubInput) {
-                  return true;
-                } else {
-                  console.log("Please enter the ${role}'s GitHub username!");
-                  return false;
-                }
-              },
-            };
-            break;
-          // prompts for school when intern selected
-          case "intern":
-            return {
-              type: "input",
-              name: "school",
-              message: "Enter the school that the ${role} attends. (Required)",
-              validate: (schoolInput) => {
-                if (schoolInput) {
-                  return true;
-                } else {
-                  console.log("Please enter the ${role}'s school!");
-                  return false;
-                }
-              },
-            };
-            break;
-        }
-      })
-      // creates team member from user input, add to teamData array, and returns to add prompt
-      .then((data) => {
-        const teamMember = new TeamMember(
-          data.name,
-          data.id,
-          data.email,
-          data.github,
-          data.school
-        );
-        teamData.push(teamMember);
-        menu();
-      })
-  );
+      },
+    ])
+  }
+  const conditionalQuestions = (employeeRole) => {
+    this.employeeRole = employeeRole;
+      switch (role) {
+        // prompts for github when engineer selected
+        case "engineer":
+          return {
+            type: "input",
+            name: "github",
+            message: "Enter the ${role}'s GitHub username.(Required)",
+            validate: (githubInput) => {
+              if (githubInput) {
+                return true;
+              } else {
+                console.log("Please enter the ${role}'s GitHub username!");
+                return false;
+              }
+            },
+          };
+          break;
+        // prompts for school when intern selected
+        case "intern":
+          return {
+            type: "input",
+            name: "school",
+            message: "Enter the school that the ${role} attends. (Required)",
+            validate: (schoolInput) => {
+              if (schoolInput) {
+                return true;
+              } else {
+                console.log("Please enter the ${role}'s school!");
+                return false;
+              }
+            },
+          };
+          break;
+      }
+    };
+  // creates team member from user input, add to teamData array, and returns to add prompt
+  // .then((data) => {
+  //   const teamMember = new TeamMember(
+  //     data.name,
+  //     data.id,
+  //     data.email,
+  //     data.github,
+  //     data.school
+  //   );
+  //   teamData.push(teamMember);
+  //   menu();
+  // })
 };
 
 promptManager()

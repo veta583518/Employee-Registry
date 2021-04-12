@@ -48,4 +48,4 @@ const generateWebpage = (data) => {
     `;
 };
 
-module.exports = pageTemplate;
+module.exports = { generateWebpage };
