@@ -36,3 +36,14 @@ test("get engineer github", () => {
 
   expect(engineer.getGithub()).toBe("MaryMooreTech");
 });
+
+test("get icon for employee role", () => {
+  const engineer = new Engineer(
+    "Mary",
+    "07021966",
+    "marymoore@gmail.com",
+    "MaryMooreTech"
+  );
+
+  expect(engineer.getIcon()).toBe("fas fa-glasses");
+});

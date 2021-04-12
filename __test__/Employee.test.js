@@ -26,8 +26,14 @@ test("get employee email", () => {
   expect(employee.getEmail()).toBe("veta583518@gmail.com");
 });
 
-// test('get employee role', () => {
-//     const employee = new Employee ("Veroncia", 961988, "veta583518@gmail.com");
+test("get employee role", () => {
+  const employee = new Employee("Veronica", 961988, "veta583518@gmail.com");
 
-//     expect(employee.getRole()).toBe("Employee")
-// });
+  expect(employee.getRole()).toBe("Employee");
+});
+
+test("get icon for employee role", () => {
+  const employee = new Employee("Veronica", 961988, "veta583518@gmail.com");
+
+  expect(employee.getIcon()).toBe("");
+});

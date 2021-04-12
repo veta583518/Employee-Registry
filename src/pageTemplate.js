@@ -1,7 +1,22 @@
 const fs = require("fs");
 
 // create card for each employee
-const createCards = (data) => {};
+const generateCards = (teamData) => {
+  return `
+  <div class="card" style="width: 18rem;">
+    <div class="card-header">
+      <h2 class="card-title"> ${this.getName()}</h2>
+      <h3 class="card-subtitile mb-2 text-muted"><i class="${this.getIcon()}"></i>${this.getRole()}</h3>
+    </div>
+    <div class="card-body">
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item>Employee ID: ${this.getId()}</li>
+        <li class="list-group-item><a href="mailto:${this.getEmail()}">Email Address: ${this.getEmail()}</a></li>
+        ${this.getConditional}
+      </ul>
+    </div>
+      `;
+};
 
 const generateWebpage = (data) => {
   return `
@@ -23,7 +38,9 @@ const generateWebpage = (data) => {
           </header>
     
           <main class="d-flex justify-content-center p-2">
-            ${generateCards(teamData)}
+            <div class="row">
+              <div class="col-sm>
+                ${generateCards(teamData)}
           </main>
           <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
         </body>
