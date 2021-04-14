@@ -1,9 +1,9 @@
 const fs = require("fs");
 
 // write html file
-const writeToFile = (fileContent, data) => {
+const writeFile = (fileContent) => {
   return new Promise((resolve, reject) => {
-    fs.writeFile("./dist/index.html", pageTemplate(data), (err) => {
+    fs.writeFile("./dist/index.html", fileContent, (err) => {
       // if there is an error, reject the Promise and send the error to the Promise's `catch()` method
       if (err) {
         reject(err);
@@ -19,4 +19,4 @@ const writeToFile = (fileContent, data) => {
   });
 };
 
-module.exports = { writeToFile };
+module.exports = { writeFile };

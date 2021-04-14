@@ -3,7 +3,7 @@ const fs = require("fs");
 // create card for each employee
 const generateCards = (teamData) => {
   return `
-  <div class="card" style="width: 18rem;">
+  <div class="card" m-3 style="width: 18rem;">
     <div class="card-header">
       <h2 class="card-title"> ${this.getName()}</h2>
       <h3 class="card-subtitile mb-2 text-muted"><i class="${this.getIcon()}"></i>${this.getRole()}</h3>
@@ -11,7 +11,9 @@ const generateCards = (teamData) => {
     <div class="card-body">
       <ul class="list-group list-group-flush">
         <li class="list-group-item>Employee ID: ${this.getId()}</li>
-        <li class="list-group-item><a href="mailto:${this.getEmail()}">Email Address: ${this.getEmail()}</a></li>
+        <li class="list-group-item>Email Address: 
+          <a href = "mailto: ${this.getEmail()}"> ${this.getEmail()}</a>
+        </li>
         ${this.getConditional}
       </ul>
     </div>
