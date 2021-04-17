@@ -134,19 +134,19 @@ const menu = () => {
 
 // prompts user with questions about team members
 const addTeam = (role) => {
-  this.role = teamRole;
-  let role = this.teamRole;
+  // this.role = teamRole;
+  // let role = this.teamRole;
 
   return inquirer.prompt([
     {
       type: "input",
       name: "name",
-      message: "Enter the ${role}'s name.",
+      message: `Enter the ${role}'s name.`,
       validate: (nameInput) => {
         if (nameInput) {
           return true;
         } else {
-          console.log("Please enter the ${role}'s name!");
+          console.log(`Please enter the ${role}'s name!`);
           return false;
         }
       },
@@ -154,12 +154,12 @@ const addTeam = (role) => {
     {
       type: "input",
       name: "id",
-      message: "Enter the ${role}'s id.",
+      message: `Enter the ${role}'s id.`,
       validate: (idInput) => {
         if (idInput) {
           return true;
         } else {
-          console.log("Please enter the ${role}'s id!");
+          console.log(`Please enter the ${role}'s id!`);
           return false;
         }
       },
@@ -167,12 +167,12 @@ const addTeam = (role) => {
     {
       type: "input",
       name: "email",
-      message: "Enter the ${role}'s email address.",
+      message: `Enter the ${role}'s email address.`,
       validate: (email) => {
         if (email) {
           return true;
         } else {
-          console.log("Please enter the {${role}'s email address!");
+          console.log(`Please enter the {${role}'s email address!`);
           return false;
         }
       },
@@ -181,12 +181,12 @@ const addTeam = (role) => {
     {
       type: "input",
       name: "github",
-      message: "Enter the ${role}'s GitHub username.(Required)",
+      message: `Enter the ${role}'s GitHub username.(Required)`,
       validate: (githubInput) => {
         if (githubInput) {
           return true;
         } else {
-          console.log("Please enter the ${role}'s GitHub username!");
+          console.log(`Please enter the ${role}'s GitHub username!`);
           return false;
         }
       },
@@ -198,12 +198,12 @@ const addTeam = (role) => {
     {
       type: "input",
       name: "school",
-      message: "Enter the school that the ${role} attends. (Required)",
+      message: `Enter the school that the ${role} attends. (Required)`,
       validate: (schoolInput) => {
         if (schoolInput) {
           return true;
         } else {
-          console.log("Please enter the ${role}'s school!");
+          console.log(`Please enter the ${role}'s school!`);
           return false;
         }
       },
