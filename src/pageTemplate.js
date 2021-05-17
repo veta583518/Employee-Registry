@@ -15,7 +15,7 @@ const generateCards = (teamData) => {
         <ul class="list-group list-group-flush">
           <li class="list-group-item>Employee ID: ${this.getId()}</li>
           <li class="list-group-item>Email Address: 
-            <a href = "mailto: ${this.getEmail()}"> ${this.getEmail()}</a>
+            <a href = "mailto:${this.getEmail()}"> ${this.getEmail()}</a>
           </li>
           ${this.getConditional}
         </ul>

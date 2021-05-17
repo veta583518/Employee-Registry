@@ -49,13 +49,11 @@ const promptManager = () => {
           type: "input",
           name: "email",
           message: "Enter your email address. (required)",
-          validate: (email) => {
-            if (email) {
-              return true;
-            } else {
-              console.log("Invalid response. Please enter your email address!");
-              return false;
-            }
+          validate: function (email) {
+            // Regex mail check (return true if valid mail)
+            return /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()\.,;\s@\"]+\.{0,1})+([^<>()\.,;:\s@\"]{2,}|[\d\.]+))$/.test(
+              email
+            );
           },
         },
 
@@ -103,8 +101,8 @@ const menu = () => {
       ])
       // use if statement to create team members based on role and push to teamData array
       .then((role) => {
-        if (role.menuChoice === "Engineer") {
-          return addTeam(role.menuChoice).then((engineerData) => {
+        if (role === "Engineer") {
+          return addTeam(role).then((engineerData) => {
             const engineer = new Engineer(
               engineerData.name,
               engineerData.id,
@@ -114,8 +112,8 @@ const menu = () => {
             teamData.push(engineer);
             menu();
           });
-        } else if (role.menuChoice === "Intern") {
-          return addTeam(role.menuChoice).then((internData) => {
+        } else if (role === "Intern") {
+          return addTeam(role).then((internData) => {
             const intern = new Intern(
               internData.name,
               internData.id,
@@ -182,16 +180,16 @@ const addTeam = (role) => {
       type: "input",
       name: "github",
       message: `Enter the ${role}'s GitHub username.(Required)`,
-      validate: (githubInput) => {
-        if (githubInput) {
-          return true;
-        } else {
-          console.log(`Please enter the ${role}'s GitHub username!`);
-          return false;
-        }
-      },
+      // validate: (githubInput) => {
+      //   if (githubInput) {
+      //     return true;
+      //   } else {
+      //     console.log(`Please enter the ${role}'s GitHub username!`);
+      //     return false;
+      //   }
+      // },
       when: (role) => {
-        role.menuChoice === "Engineer";
+        role === "Engineer";
       },
     },
     // prompts for school when intern selected
@@ -199,22 +197,23 @@ const addTeam = (role) => {
       type: "input",
       name: "school",
       message: `Enter the school that the ${role} attends. (Required)`,
-      validate: (schoolInput) => {
-        if (schoolInput) {
-          return true;
-        } else {
-          console.log(`Please enter the ${role}'s school!`);
-          return false;
-        }
-      },
+      // validate: (schoolInput) => {
+      //   if (schoolInput) {
+      //     return true;
+      //   } else {
+      //     console.log(`Please enter the ${role}'s school!`);
+      //     return false;
+      //   }
+      // },
       when: (role) => {
-        role.menuChoice === "Intern";
+        role === "Intern";
       },
     },
   ]);
 };
 //
 const buildTeam = () => {
+  console.log(teamData);
   //   generateWebpage(teamData).then((generateWebpage) => {
   //     return new Promise((resolve, reject) => {
   //       fs.writeFile("./dist/index.html", pageHtml, (err) => {
