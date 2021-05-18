@@ -4,8 +4,8 @@ const fs = require("fs");
 const Manager = require("./lib/Manager");
 const Engineer = require("./lib/Engineer");
 const Intern = require("./lib/Intern");
-const generateWebpage = require("./src/pageTemplate.js");
-const { writeFile } = require("./utils/generateWebpage");
+const generatePage = require("./src/pageTemplate.js");
+
 const validator = require("email-validator");
 
 // array to store team data
@@ -51,9 +51,17 @@ const promptManager = () => {
           message: "Enter your email address. (required)",
           validate: function (email) {
             // Regex mail check (return true if valid mail)
-            return /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()\.,;\s@\"]+\.{0,1})+([^<>()\.,;:\s@\"]{2,}|[\d\.]+))$/.test(
-              email
-            );
+            valid =
+              /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()\.,;\s@\"]+\.{0,1})+([^<>()\.,;:\s@\"]{2,}|[\d\.]+))$/.test(
+                email
+              );
+
+            if (valid) {
+              return true;
+            } else {
+              console.log(`Please enter a valid email address!`);
+              return false;
+            }
           },
         },
 
@@ -89,62 +97,109 @@ const promptManager = () => {
 
 // prompts user with menu with the option to add an engineer, intern or finish building my team
 const menu = () => {
-  return (
-    inquirer
-      .prompt([
-        {
-          type: "list",
-          name: "menuChoice",
-          message: "Add members to your team",
-          choices: ["Engineer", "Intern", "My team is complete"],
-        },
-      ])
-      // use if statement to create team members based on role and push to teamData array
-      .then((role) => {
-        if (role === "Engineer") {
-          return addTeam(role).then((engineerData) => {
-            const engineer = new Engineer(
-              engineerData.name,
-              engineerData.id,
-              engineerData.email,
-              engineerData.github
-            );
-            teamData.push(engineer);
-            menu();
-          });
-        } else if (role === "Intern") {
-          return addTeam(role).then((internData) => {
-            const intern = new Intern(
-              internData.name,
-              internData.id,
-              internData.email,
-              internData.school
-            );
-            teamData.push(intern);
-            menu();
-          });
-        } else {
-          return buildTeam();
-        }
-      })
-  );
+  return inquirer
+    .prompt([
+      {
+        type: "list",
+        name: "menuChoice",
+        message: "Add members to your team",
+        choices: ["Engineer", "Intern", "My team is complete"],
+      },
+    ])
+    .then((role) => {
+      conditionalQuestions(role);
+    });
+};
+
+const conditionalQuestions = (role) => {
+  //console.log(role);
+  if (role.menuChoice === "Engineer") {
+    return (
+      inquirer
+        .prompt([
+          // prompts for github when engineer selected
+          {
+            type: "input",
+            name: "github",
+            message: `Enter the ${role.menuChoice}'s GitHub username.(Required)`,
+            validate: (githubInput) => {
+              if (githubInput) {
+                return true;
+              } else {
+                console.log(
+                  `Please enter the ${role.menuChoice}'s GitHub username!`
+                );
+                return false;
+              }
+            },
+          },
+        ])
+        // use if statement to create team members based on role and push to teamData array
+        .then(async (conditionals) => {
+          const employeeData = await addTeam(role);
+          const engineer = new Engineer(
+            employeeData.name,
+            employeeData.id,
+            employeeData.email,
+            conditionals.github
+          );
+          //console.log(engineerData);
+          // console.log(conditionals);
+          teamData.push(engineer);
+          menu();
+        })
+    );
+  } else if (role.menuChoice === "Intern") {
+    // console.log(role);
+    // prompts for school when intern selected
+    return (
+      inquirer
+        .prompt([
+          {
+            type: "input",
+            name: "school",
+            message: `Enter the school that the ${role.menuChoice} attends. (Required)`,
+            validate: (schoolInput) => {
+              if (schoolInput) {
+                return true;
+              } else {
+                return false;
+              }
+            },
+          },
+        ])
+        // use if statement to create intern and push to teamData array
+        .then(async (conditionals) => {
+          const employeeData = await addTeam(role);
+          const intern = new Intern(
+            employeeData.name,
+            employeeData.id,
+            employeeData.email,
+            conditionals.school
+          );
+          //console.log(intern);
+          teamData.push(intern);
+          menu();
+        })
+    );
+  } else {
+    return buildTeam();
+  }
 };
 
 // prompts user with questions about team members
 const addTeam = (role) => {
-  // this.role = teamRole;
-  // let role = this.teamRole;
-
+  // console.log(role);
   return inquirer.prompt([
     {
       type: "input",
       name: "name",
-      message: `Enter the ${role}'s name.`,
+      message: `Enter the ${role.menuChoice}'s name.`,
       validate: (nameInput) => {
         if (nameInput) {
           return true;
         } else {
-          console.log(`Please enter the ${role}'s name!`);
+          console.log(`Please enter the ${role.menuChoice}'s name!`);
           return false;
         }
       },
@@ -152,12 +207,12 @@ const addTeam = (role) => {
     {
       type: "input",
       name: "id",
-      message: `Enter the ${role}'s id.`,
+      message: `Enter the ${role.menuChoice}'s employee id.`,
       validate: (idInput) => {
         if (idInput) {
           return true;
         } else {
-          console.log(`Please enter the ${role}'s id!`);
+          console.log(`Please enter the ${role.menuChoice}'s employee id!`);
           return false;
         }
       },
@@ -165,72 +220,33 @@ const addTeam = (role) => {
     {
       type: "input",
       name: "email",
-      message: `Enter the ${role}'s email address.`,
+      message: `Enter the ${role.menuChoice}'s email address.`,
       validate: (email) => {
-        if (email) {
+        valid =
+          /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()\.,;\s@\"]+\.{0,1})+([^<>()\.,;:\s@\"]{2,}|[\d\.]+))$/.test(
+            email
+          );
+        if (valid) {
           return true;
         } else {
-          console.log(`Please enter the {${role}'s email address!`);
+          console.log(`Please enter a valid email address!`);
           return false;
         }
-      },
-    },
-    // prompts for github when engineer selected
-    {
-      type: "input",
-      name: "github",
-      message: `Enter the ${role}'s GitHub username.(Required)`,
-      // validate: (githubInput) => {
-      //   if (githubInput) {
-      //     return true;
-      //   } else {
-      //     console.log(`Please enter the ${role}'s GitHub username!`);
-      //     return false;
-      //   }
-      // },
-      when: (role) => {
-        role === "Engineer";
-      },
-    },
-    // prompts for school when intern selected
-    {
-      type: "input",
-      name: "school",
-      message: `Enter the school that the ${role} attends. (Required)`,
-      // validate: (schoolInput) => {
-      //   if (schoolInput) {
-      //     return true;
-      //   } else {
-      //     console.log(`Please enter the ${role}'s school!`);
-      //     return false;
-      //   }
-      // },
-      when: (role) => {
-        role === "Intern";
       },
     },
   ]);
 };
 //
 const buildTeam = () => {
-  console.log(teamData);
-  //   generateWebpage(teamData).then((generateWebpage) => {
-  //     return new Promise((resolve, reject) => {
-  //       fs.writeFile("./dist/index.html", pageHtml, (err) => {
-  //         // if there is an error, reject the Promise and send the error to the Promise's `catch()` method
-  //         if (err) {
-  //           reject(err);
-  //           //return out of the function here to make sure the Promise doesn't accidentally execute the resolve() function as well
-  //           return;
-  //         }
-  //         // if everything went well, resolve the Promise and send the successful data to the `.then()`method
-  //         resolve({
-  //           ok: true,
-  //           message: "Webpage created!",
-  //         });
-  //       });
-  //     });
-  //   });
+  // console.log(teamData);
+  // console.log(teamData.length);
+  generatePage(teamData).then((teamHTML) => {
+    return fs.writeFile("./dist/index.html", teamHTML, (err) => {
+      if (err) {
+        console.log(err);
+      }
+    });
+  });
 };
 
 promptManager();
