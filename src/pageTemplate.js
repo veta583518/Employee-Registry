@@ -3,27 +3,29 @@
 // const generateIntern = require("../src/generateIntern");
 
 // create card for each employee
+
 const generateCards = (teamData) => {
-  const htmlArray = [];
-  // teamData.map((name, id, email, icon, conditional, role) => {
-  //   return `
-  //   <div class="card shadow p-3 mb-5 bg-body rounded" style="width: 18rem;">
-  //     <div class="card-header bg-primary">
-  //       <h2 class="card-title text-white"> ${name}</h2>
-  //       <h3 class="card-subtitile mb-2 text-white"><i class="${icon} mr-3"></i>${role}</h3>
-  //     </div>
-  //     <div class="card-body">
-  //       <ul class="list-group list-group-flush">
-  //         <li class="list-group-item p3">Employee ID: ${id}</li>
-  //         <li class="list-group-item p3">Email Address:
-  //           <a href = "mailto:${email}"> ${email}</a>
-  //         </li>
-  //         ${conditional}
-  //       </ul>
-  //     </div>
-  //   </div>
-  //   `;
-  // });
+  let htmlArray = [];
+  teamData.map((employee) => {
+    const html = `
+    <div class="card shadow mb-5 bg-body rounded" style="width: 18rem;">
+      <div class="card-header bg-primary">
+        <h2 class="card-title text-white"> ${employee.name}</h2>
+        <h3 class="card-subtitile mb-2 text-white"><i class="${employee.icon}" id="icon"></i>${employee.role}</h3>
+      </div>
+      <div class="card-body">
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item p3">Employee ID: ${employee.id}</li>
+          <li class="list-group-item p3">Email Address:
+            <a href = "mailto:${employee.email}"> ${employee.email}</a>
+          </li>
+          ${employee.conditional}
+        </ul>
+      </div>
+    </div>
+    `;
+    return (htmlArray = [...htmlArray, html]);
+  });
 
   return htmlArray.join(" ");
 };
@@ -39,7 +41,7 @@ module.exports = generatePage = (teamData) => {
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
           <meta http-equiv="X-UA-Compatible" content="ie=edge">
           <title>Team Profile Generator</title>
-          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css">
           <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
         </head>
       
