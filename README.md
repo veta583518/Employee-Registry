@@ -20,7 +20,7 @@ Application that takes in information about employees and generates an HTML webp
 ## Walk Through
 
 You can view the walk through [here](https://drive.google.com/file/d/1F6xBDWd-PatmIG4xcUQGtevVMRQY2Dz4/view).
-[!screenshot]()
+![screenshot](https://github.com/veta583518/Employee-Registry/blob/main/assets/Employee-Registry-screenshot.PNG)
 
 [Back to Contents](#table-of-contents)
 
